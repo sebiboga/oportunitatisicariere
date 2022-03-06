@@ -1,18 +1,18 @@
-# This is a basic workflow to help you get started with Actions
+# This is a workflow to help you run all JMeter scripts with Actions
 
-name: peviitor.ro
+name: jmeter
 
 # Controls when the workflow will run
 on:
-    push:
-     branches: [ main ]
-    pull_request:
-     branches: [ main ]
-    schedule:
-    - cron: '30 18 * * *'
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+  schedule:
+  - cron: '30 18 * * *'
+
 
   # Allows you to run this workflow manually from the Actions tab
-    workflow_dispatch:
+  workflow_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -25,14 +25,30 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      - name: Apache JMeter
-        uses: rbhadti94/apache-jmeter-action@v0.4.0
-        with:
-          testFilePath: tecknoworks.jmx
-          outputReportsFolder: reports/
-          plugins: jpgc-dummy
+      - name: where are the files?
+        run: |
+           pwd
+           ls
+      
+      # Runs a set of commands using the runners shell
+      - name: install jmeter
+        run: |
+          java -version
+          wget https://downloads.apache.org//jmeter/binaries/apache-jmeter-5.4.zip
+          unzip apache-jmeter-5.4.zip
+          cd apache-jmeter-5.4/bin
+          ./jmeter -v
+          pwd
+          
+      - name: install plugins
+        run: |
+          cd $GITHUB_WORKSPACE/apache-jmeter-5.4
+          wget -q --no-check-certificate https://jmeter-plugins.org/files/packages/jpgc-dummy-0.4.zip  -P .
+          unzip -o jpgc-dummy-0.4.zip  && rm jpgc-dummy-0.4.zip
+          
+      - name: run jmx scripts
+        run: |
+         cd $GITHUB_WORKSPACE/apache-jmeter-5.4/bin
+         for i in $( ls $GITHUB_WORKSPACE/*.jmx); do
+            ./jmeter -n -t $i;
+         done
