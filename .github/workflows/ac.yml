@@ -1,0 +1,24 @@
+name: ac
+
+on: 
+  schedule:
+    - cron: '0 0 * * *'  # Runs every day at midnight
+  workflow_dispatch:    # Allows running the workflow manually from GitHub Actions tab
+
+jobs:
+  commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.ACTIONS_TOKEN }}  # Use your personal access token
+
+      - name: Commit and push
+        run: |
+          echo $(date -u) "Keep alive commit" >> ./keepalive.txt
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "Keep alive commit" || exit 0  # Do not fail the action if no changes
+          git push
