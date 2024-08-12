@@ -169,7 +169,7 @@ this_job += &apos;&quot;job_title&quot;:&quot;&apos; + title + &apos;&quot;&apos
 this_job += &apos;,&apos;;
 this_job += &apos;&quot;job_link&quot;:&quot;&apos;+link+&apos;&quot;&apos;;
 this_job += &apos;,&apos;;
-this_job += &apos;&quot;hiringOrganization.name&quot;:&quot;&apos;+company+&apos;&quot;&apos;;
+this_job += &apos;&quot;company&quot;:&quot;&apos;+company+&apos;&quot;&apos;;
 this_job += &apos;,&apos;;
 
 this_job += &apos;&quot;country&quot;:&quot;&apos;+country+&apos;&quot;&apos;;
